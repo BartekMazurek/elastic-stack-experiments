@@ -10,8 +10,6 @@ services:
             - xpack.security.enabled=false
         ports:
             - "9200:9200"
-        volumes:
-            - es_volume:/usr/share/elasticsearch/data
 
     kibana:
         build:
@@ -25,5 +23,23 @@ services:
         ports:
             - "5601:5601"
 
-volumes:
-    es_volume:
+    nginx:
+        build:
+            context: .
+            dockerfile: ./docker/nginx/Dockerfile
+        container_name: nginx
+        ports:
+            - "8888:80"
+        volumes:
+            - ./nginx_volume:/var/log/nginx
+
+    filebeat:
+        build:
+            context: .
+            dockerfile: ./docker/filebeat/Dockerfile
+        container_name: filebeat
+        user: root
+        depends_on:
+            - nginx
+        volumes:
+            - ./nginx_volume:/var/log/nginx
