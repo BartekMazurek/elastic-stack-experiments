@@ -1,0 +1,22 @@
+metricbeat.modules:
+
+    -   module: nginx
+        metricsets: [ "stubstatus" ]
+        period: 10s
+        hosts: [ "http://nginx/nginx_status" ]
+
+    -   module: docker
+        period: 10s
+        hosts: [ "unix:///var/run/docker.sock" ]
+        metricsets:
+            - container
+            - cpu
+            - memory
+            - network
+            - diskio
+
+output.elasticsearch:
+    hosts: [ "http://es:9200" ]
+
+setup.ilm.enabled: true
+logging.level: info
