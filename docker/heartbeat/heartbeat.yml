@@ -1,0 +1,15 @@
+heartbeat.monitors:
+    -   type: http
+        id: nginx-http
+        name: Nginx HTTP
+        schedule: "@every 10s"
+        urls:
+            - http://nginx
+        check.response.status: [ 200 ]
+
+processors:
+    -   add_host_metadata: { }
+    -   add_docker_metadata: { }
+
+output.elasticsearch:
+    hosts: [ "http://es:9200" ]
